@@ -227,6 +227,7 @@ public class Flashcard extends javax.swing.JFrame {
         
         textFront.setText("");
         textBack.setText("");
+        //!!
         
         buttonQuiz.setEnabled(true);
         buttonShuffle.setEnabled(true);
