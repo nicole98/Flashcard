@@ -187,7 +187,7 @@ public class Flashcard extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelTerm)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -197,7 +197,7 @@ public class Flashcard extends javax.swing.JFrame {
                     .addComponent(labelMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonQuiz)
                     .addComponent(buttonShuffle))
@@ -222,8 +222,10 @@ public class Flashcard extends javax.swing.JFrame {
         if (front == null && back == null){
             labelMessage.setText("Please fill in both boxes");
         }
-        firstSide.add(front);
-        secondSide.add(back);
+        else {
+            firstSide.add(front);
+            secondSide.add(back);
+        }
         
         textFront.setText("");
         textBack.setText("");
@@ -253,10 +255,27 @@ public class Flashcard extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonFlipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFlipActionPerformed
-        String card = textCard.getText();
-        if (card == firstSide.get(0)){
-            textCard.setText(secondSide.get(0));
+        int index;
+        index = Collections.binarySearch(firstSide, textCard.getText());
+        if (index > -1){
+            for (int i = 0; i < firstSide.size(); i++){
+                if (firstSide.get(i) == textCard.getText()){
+                    textCard.setText(secondSide.get(i));
+                }
+            }
         }
+        else {
+            for (int i = 0; i < secondSide.size(); i++){
+                if (secondSide.get(i) == textCard.getText()){
+                    textCard.setText(firstSide.get(i));
+                }
+            } 
+        }
+        //find index
+//        String card = textCard.getText();
+//        if (card == firstSide.get(0)){
+//            textCard.setText(secondSide.get(0));
+//        }
     }//GEN-LAST:event_buttonFlipActionPerformed
 
     /**
