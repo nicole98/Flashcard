@@ -47,8 +47,10 @@ public class Flashcard extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         buttonShuffle = new javax.swing.JButton();
         labelMessage = new javax.swing.JLabel();
+        buttonPlay = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -120,7 +122,19 @@ public class Flashcard extends javax.swing.JFrame {
             }
         });
 
+        buttonPlay.setText("Play");
+        buttonPlay.setEnabled(false);
+        buttonPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPlayActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenu1.add(jMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -140,32 +154,35 @@ public class Flashcard extends javax.swing.JFrame {
                 .addGap(79, 79, 79))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(buttonBack)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonNext)
-                                .addGap(86, 86, 86)
-                                .addComponent(buttonFlip))
-                            .addComponent(jScrollPane3)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(buttonQuiz)
-                                .addGap(34, 34, 34)
-                                .addComponent(buttonShuffle))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(148, 148, 148)
                         .addComponent(labelTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(buttonBack)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(buttonNext)
+                                        .addGap(86, 86, 86)
+                                        .addComponent(buttonFlip))
+                                    .addComponent(jScrollPane3)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(buttonQuiz)
+                                        .addGap(34, 34, 34)
+                                        .addComponent(buttonShuffle)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(buttonPlay)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(167, 167, 167)
                                 .addComponent(buttonAdd)
-                                .addGap(21, 21, 21)
-                                .addComponent(labelMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labelMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap(45, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -200,7 +217,8 @@ public class Flashcard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonQuiz)
-                    .addComponent(buttonShuffle))
+                    .addComponent(buttonShuffle)
+                    .addComponent(buttonPlay))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -218,24 +236,19 @@ public class Flashcard extends javax.swing.JFrame {
         String front, back;
         front = textFront.getText();
         back = textBack.getText();
-        
-        if (front == null && back == null){
-            labelMessage.setText("Please fill in both boxes");
-        }
-        else {
-            firstSide.add(front);
-            secondSide.add(back);
-        }
+
+        firstSide.add(front);
+        secondSide.add(back);
         
         textFront.setText("");
         textBack.setText("");
-        //!!
         
         buttonQuiz.setEnabled(true);
         buttonShuffle.setEnabled(true);
         buttonNext.setEnabled(true);
         buttonBack.setEnabled(true);
         buttonFlip.setEnabled(true);
+        buttonPlay.setEnabled(true);
     }//GEN-LAST:event_buttonAddActionPerformed
 
     private void buttonQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuizActionPerformed
@@ -243,40 +256,57 @@ public class Flashcard extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonQuizActionPerformed
 
     private void buttonShuffleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShuffleActionPerformed
-        // TODO add your handling code here:
+        Collections.shuffle(firstSide);
+        textCard.setText(firstSide.get(0));
     }//GEN-LAST:event_buttonShuffleActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        // TODO add your handling code here:
+        int index, ind;
+        index = Collections.binarySearch(firstSide, textCard.getText());
+        //while (textCard.getText() != firstSide.get(firstSide.lastIndexOf(textCard.getText()) -1 )){
+            if (index > -1){
+                ind = firstSide.indexOf(textCard.getText());
+                textCard.setText(firstSide.get(ind - 1));
+            }
+            else{
+                ind = secondSide.indexOf(textCard.getText());
+                textCard.setText(firstSide.get(ind - 1));
+            }
+//        }
+//        buttonNext.setEnabled(false);
+//        
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
-        //while ()
+        int index, ind;
+        index = Collections.binarySearch(firstSide, textCard.getText());
+        if (index > -1){
+            ind = firstSide.indexOf(textCard.getText());
+            textCard.setText(firstSide.get(ind + 1));
+        }
+        else{
+            ind = secondSide.indexOf(textCard.getText());
+            textCard.setText(firstSide.get(ind + 1));
+        }
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonFlipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFlipActionPerformed
-        int index;
+        int index, ind;
         index = Collections.binarySearch(firstSide, textCard.getText());
         if (index > -1){
-            for (int i = 0; i < firstSide.size(); i++){
-                if (firstSide.get(i) == textCard.getText()){
-                    textCard.setText(secondSide.get(i));
-                }
-            }
+            ind = firstSide.indexOf(textCard.getText());
+            textCard.setText(secondSide.get(ind));
         }
-        else {
-            for (int i = 0; i < secondSide.size(); i++){
-                if (secondSide.get(i) == textCard.getText()){
-                    textCard.setText(firstSide.get(i));
-                }
-            } 
+        else{
+            ind = secondSide.indexOf(textCard.getText());
+            textCard.setText(firstSide.get(ind));
         }
-        //find index
-//        String card = textCard.getText();
-//        if (card == firstSide.get(0)){
-//            textCard.setText(secondSide.get(0));
-//        }
+//      
     }//GEN-LAST:event_buttonFlipActionPerformed
+
+    private void buttonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPlayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonPlayActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,12 +349,14 @@ public class Flashcard extends javax.swing.JFrame {
     private javax.swing.JButton buttonFlip;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton buttonNext;
+    private javax.swing.JButton buttonPlay;
     private javax.swing.JButton buttonQuiz;
     private javax.swing.JButton buttonShuffle;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
