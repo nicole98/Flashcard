@@ -1,11 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Nicole Tao
+ * Flashcard.java
+ * This program creates flashcards
+ * June 22nd, 2018
  */
 
 package Flashcard;
 import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 /**
  *
  * @author nitao5001
@@ -13,6 +17,8 @@ import java.util.*;
 public class Flashcard extends javax.swing.JFrame {
     ArrayList <String> firstSide = new ArrayList();
     ArrayList <String> secondSide = new ArrayList();
+    private Timer playTimer;
+    private int cardNumber;
     /**
      * Creates new form Flashcard
      */
@@ -46,7 +52,6 @@ public class Flashcard extends javax.swing.JFrame {
         buttonQuiz = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         buttonShuffle = new javax.swing.JButton();
-        labelMessage = new javax.swing.JLabel();
         buttonPlay = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -132,7 +137,13 @@ public class Flashcard extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Exit");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
@@ -181,8 +192,7 @@ public class Flashcard extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(167, 167, 167)
                                 .addComponent(buttonAdd)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap(45, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -209,9 +219,7 @@ public class Flashcard extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonAdd)
-                    .addComponent(labelMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(buttonAdd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,80 +242,130 @@ public class Flashcard extends javax.swing.JFrame {
 
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
         String front, back;
-        front = textFront.getText();
+        front = textFront.getText(); //gets text entered in the text boxes
         back = textBack.getText();
 
-        firstSide.add(front);
+        firstSide.add(front); //adds text entered from user to two seperate ArrayLists
         secondSide.add(back);
         
-        textFront.setText("");
+        textFront.setText(""); //clears text boxes
         textBack.setText("");
         
-        buttonQuiz.setEnabled(true);
+        buttonQuiz.setEnabled(true); //enabling buttons
         buttonShuffle.setEnabled(true);
-        buttonNext.setEnabled(true);
-        buttonBack.setEnabled(true);
-        buttonFlip.setEnabled(true);
         buttonPlay.setEnabled(true);
     }//GEN-LAST:event_buttonAddActionPerformed
 
     private void buttonQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuizActionPerformed
-        textCard.setText(firstSide.get(0));
+        textCard.setText(firstSide.get(0)); //displays the first element in the ArrayList
+        buttonFlip.setEnabled(true);// enables flip button
+        if ((firstSide.size() <= 1) && (secondSide.size() <= 1)){ 
+            buttonNext.setEnabled(false); //If there is only 1 element, it is impossible to go back/forward, buttons remain disabled
+            buttonBack.setEnabled(false);
+        }
+        else{
+            buttonNext.setEnabled(true);//If more than 1 element in ArrayList, user can now more forward and back, buttons enabled
+            buttonBack.setEnabled(true);
+        }
     }//GEN-LAST:event_buttonQuizActionPerformed
 
     private void buttonShuffleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShuffleActionPerformed
-        Collections.shuffle(firstSide);
-        textCard.setText(firstSide.get(0));
+        Collections.shuffle(firstSide); //Shuffles the ArrayList
+        textCard.setText(firstSide.get(0)); //Displays the first element in the shuffled ArrayLIst
     }//GEN-LAST:event_buttonShuffleActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        int index, ind;
-        index = Collections.binarySearch(firstSide, textCard.getText());
-        //while (textCard.getText() != firstSide.get(firstSide.lastIndexOf(textCard.getText()) -1 )){
-            if (index > -1){
-                ind = firstSide.indexOf(textCard.getText());
-                textCard.setText(firstSide.get(ind - 1));
+        if (!firstSide.get(0).equals(textCard.getText())){ //checks if the text displayed equals the first element of the first ArrayList
+            goBack(); //no, calls the method
+        }
+        else {
+            if (textCard.getText().equals(firstSide.get(0))){
+                textCard.setText(firstSide.get(firstSide.size()-1)); //yes, goes to the last elements of the ArrayList
             }
-            else{
-                ind = secondSide.indexOf(textCard.getText());
-                textCard.setText(firstSide.get(ind - 1));
-            }
-//        }
-//        buttonNext.setEnabled(false);
-//        
+        }     
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
-        int index, ind;
-        index = Collections.binarySearch(firstSide, textCard.getText());
-        if (index > -1){
-            ind = firstSide.indexOf(textCard.getText());
-            textCard.setText(firstSide.get(ind + 1));
+        if (!firstSide.get(firstSide.size()-1).equals(textCard.getText())){ //checks if the text displayed equals the first element of the first ArrayList
+            textCard.setText("" + moveForward()); //no, display new text
         }
-        else{
-            ind = secondSide.indexOf(textCard.getText());
-            textCard.setText(firstSide.get(ind + 1));
+        else {
+            if (textCard.getText().equals(firstSide.get(firstSide.size()-1))){
+                textCard.setText(firstSide.get(0)); //yes, goes back to the beginning of the ArrayLIst
+            }
         }
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonFlipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFlipActionPerformed
         int index, ind;
-        index = Collections.binarySearch(firstSide, textCard.getText());
-        if (index > -1){
+        index = Collections.binarySearch(firstSide, textCard.getText()); //searches the first ArrayList for what is displayed
+        if (index > -1){ //if first ArrayList does contain the text displayed
             ind = firstSide.indexOf(textCard.getText());
-            textCard.setText(secondSide.get(ind));
+            textCard.setText(secondSide.get(ind)); //display the second ArrayList at the corresponding index
         }
         else{
-            ind = secondSide.indexOf(textCard.getText());
-            textCard.setText(firstSide.get(ind));
+            ind = secondSide.indexOf(textCard.getText()); //second Array contains the text that is displayed
+            textCard.setText(firstSide.get(ind)); //display the first ArrayList at the corresponding index
         }
 //      
     }//GEN-LAST:event_buttonFlipActionPerformed
 
     private void buttonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPlayActionPerformed
-        // TODO add your handling code here:
+        cardNumber = 0; //starts with the first card
+        playTimer= new Timer(3000, new ActionListener(){ //timer, every 3 seconds a new card will be displayed
+            public void actionPerformed(ActionEvent e) {
+                textCard.setText(firstSide.get(cardNumber));
+                cardNumber = cardNumber + 1; //moves on to the next card
+                
+                if (cardNumber == firstSide.size()-1){
+                    playTimer.stop(); //stop at the last index
+                }  
+            }   
+        });
+        playTimer.start(); //start the timer
     }//GEN-LAST:event_buttonPlayActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    
+    /**
+     * Goes back a card/an index
+     * pre:  method is called, there are items in the ArrayList
+     * post: Goes to the previous index and displays the previous card
+     */
+    private void goBack(){
+        int index, ind;
+        index = Collections.binarySearch(firstSide, textCard.getText()); //checks to see if text displayed is in the first ArrayList
+        if (index > -1){ //yes it is
+                ind = firstSide.indexOf(textCard.getText());//finds index that the displayed text is at in the ArrayList
+                textCard.setText(firstSide.get(ind - 1)); //Displays the first side of the previous card
+            }
+            else{ //part of the second ArrayList, not the first
+                ind = secondSide.indexOf(textCard.getText()); //finds index that the displayed text is at in the ArrayList
+                textCard.setText(firstSide.get(ind - 1)); //Displays the first side of the previous card
+            }    
+    }
+    
+    /**
+    * Goes to the next card/index
+    * pre:  method is called, there are items in the ArrayList
+    * post: returns the new text to be displayed
+    */
+    private String moveForward(){
+        int index, ind;
+        String text;
+        index = Collections.binarySearch(firstSide, textCard.getText()); //checks to see if text displayed is in the first ArrayList
+        if (index > -1){ 
+                ind = firstSide.indexOf(textCard.getText()); //if it is, find the index of the text displayed in the ArrayLIst
+                text = firstSide.get(ind + 1); //goes to the next element
+            }
+        else{
+            ind = secondSide.indexOf(textCard.getText()); //if not, finds the index of the text text displayed in the second ArrayLIst 
+            text = firstSide.get(ind + 1); //goes to next element
+        }
+        return text;
+    }
     /**
      * @param args the command line arguments
      */
@@ -361,7 +419,6 @@ public class Flashcard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel labelMessage;
     private javax.swing.JLabel labelTerm;
     private javax.swing.JLabel labelTitle;
     private javax.swing.JTextArea textBack;
