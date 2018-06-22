@@ -63,10 +63,14 @@ public class Flashcard extends javax.swing.JFrame {
         labelTitle.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelTitle.setText("Flashcard Creator");
 
+        jScrollPane1.setHorizontalScrollBar(null);
+
         textFront.setColumns(20);
         textFront.setLineWrap(true);
         textFront.setRows(5);
         jScrollPane1.setViewportView(textFront);
+
+        jScrollPane2.setHorizontalScrollBar(null);
 
         textBack.setColumns(20);
         textBack.setRows(5);
@@ -240,6 +244,10 @@ public class Flashcard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * The button will add elements to two different ArrayLists
+     * @param evt 
+     */
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
         String front, back;
         front = textFront.getText(); //gets text entered in the text boxes
@@ -256,6 +264,10 @@ public class Flashcard extends javax.swing.JFrame {
         buttonPlay.setEnabled(true);
     }//GEN-LAST:event_buttonAddActionPerformed
 
+    /**
+     * This button will display the first index of the first ArrayList in the text area at the bottom
+     * @param evt 
+     */
     private void buttonQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuizActionPerformed
         textCard.setText(firstSide.get(0)); //displays the first element in the ArrayList
         buttonFlip.setEnabled(true);// enables flip button
@@ -268,12 +280,20 @@ public class Flashcard extends javax.swing.JFrame {
             buttonBack.setEnabled(true);
         }
     }//GEN-LAST:event_buttonQuizActionPerformed
-
+    
+    /**
+     * This button shuffles the elements in the first ArrayList
+     * @param evt 
+     */
     private void buttonShuffleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShuffleActionPerformed
         Collections.shuffle(firstSide); //Shuffles the ArrayList
         textCard.setText(firstSide.get(0)); //Displays the first element in the shuffled ArrayLIst
     }//GEN-LAST:event_buttonShuffleActionPerformed
 
+    /**
+     * This button displays the previous index of the first ArrayList
+     * @param evt 
+     */
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         if (!firstSide.get(0).equals(textCard.getText())){ //checks if the text displayed equals the first element of the first ArrayList
             goBack(); //no, calls the method
@@ -285,6 +305,10 @@ public class Flashcard extends javax.swing.JFrame {
         }     
     }//GEN-LAST:event_buttonBackActionPerformed
 
+    /**
+     * This button displays the next index of the first ArrayList
+     * @param evt 
+     */
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
         if (!firstSide.get(firstSide.size()-1).equals(textCard.getText())){ //checks if the text displayed equals the first element of the first ArrayList
             textCard.setText("" + moveForward()); //no, display new text
@@ -296,6 +320,10 @@ public class Flashcard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonNextActionPerformed
 
+    /**
+     * This button display the other side of the flash card created
+     * @param evt 
+     */
     private void buttonFlipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFlipActionPerformed
         int index, ind;
         index = Collections.binarySearch(firstSide, textCard.getText()); //searches the first ArrayList for what is displayed
@@ -310,6 +338,10 @@ public class Flashcard extends javax.swing.JFrame {
 //      
     }//GEN-LAST:event_buttonFlipActionPerformed
 
+    /**
+     * This button will display all the elements in the first ArrayList; each element is displayed for 3 seconds
+     * @param evt 
+     */
     private void buttonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPlayActionPerformed
         cardNumber = 0; //starts with the first card
         playTimer= new Timer(3000, new ActionListener(){ //timer, every 3 seconds a new card will be displayed
@@ -325,6 +357,10 @@ public class Flashcard extends javax.swing.JFrame {
         playTimer.start(); //start the timer
     }//GEN-LAST:event_buttonPlayActionPerformed
 
+    /**
+     * This will allow the user to exit the program
+     * @param evt 
+     */
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -351,6 +387,7 @@ public class Flashcard extends javax.swing.JFrame {
     * Goes to the next card/index
     * pre:  method is called, there are items in the ArrayList
     * post: returns the new text to be displayed
+    * @return
     */
     private String moveForward(){
         int index, ind;
